@@ -1,22 +1,26 @@
 import { createStore, combineReducers } from "redux";
 
+//<------------------
+/* ACTION CREATORS */
+//<------------------
 
 const addNewMessageActionCreator = ({ userName, text }) => ({
   type: "ADD_MESSAGE",
   payload: { userName, text }
 });
 
-
-const addUserActionCreator = ({userName}) => ({
+const addUserActionCreator = ({ userName }) => ({
   type: "ADD_USER",
-  payload: {userName} //???{userName}
+  payload: { userName }
 });
+
+//<------------------
+/* REDUCERS */
+//<------------------
 
 const defaultAppState = { userName: "", text: "" };
 
-const messagesReducer = function (previousState = defaultAppState, action) {
-  console.log(">>> ACTION OF Type >>> new message " + action.type);
-  console.log(">>> ACTION's PAYLOAD IS >>> new message ", action.payload);
+const messagesReducer = function(previousState = defaultAppState, action) {
   switch (action.type) {
     case "ADD_MESSAGE":
       return {
@@ -29,51 +33,54 @@ const messagesReducer = function (previousState = defaultAppState, action) {
 };
 
 const usersReducer = function(previousState = { userList: [] }, action) {
-  console.log(">>> ACTION OF Type >>> user " + action.type);
-  console.log(">>> ACTION's PAYLOAD IS >>> user ", action.payload);
   switch (action.type) {
     case "ADD_USER":
       return {
-        userList: [...previousState.userList, action.payload],
+        userList: [...previousState.userList, action.payload]
       };
     case "ADD_MESSAGE":
-      if (previousState.userList.indexOf(action.payload) === -1) {
+      var names = previousState.userList.map(function(user) {
+        return user.userName;
+      });
+      if (names.indexOf(action.payload.userName) === -1) {
         return {
-          userList: [...previousState.userList, action.payload],
-        }
-      };
+          userList: [
+            ...previousState.userList,
+            { userName: action.payload.userName }
+          ]
+        };
+      }
     default:
       return previousState;
   }
 };
 
 const chatRoomReducer = function(previousState = [], action) {
-  //complete this reducer function
-  console.log(">>> ACTION OF Type >>> user " + action.type);
-  console.log(">>> ACTION's PAYLOAD IS >>> user ", action.payload);
   switch (action.type) {
     case "ADD_MESSAGE":
       return [...previousState, action.payload];
-    default: 
+    default:
       return previousState;
   }
 };
 
 const rootReducer = combineReducers({
   messages: messagesReducer,
-  //add the rest of the reducers
   users: usersReducer,
   chatList: chatRoomReducer
-
 });
+
+//<------------------
+/* INITIAL STATE */
+//<------------------
 
 const storeInitialState = {
   messages: { userName: "", text: "" },
   users: {
     userList: []
   },
-    chatList: []
-} 
+  chatList: []
+};
 
 const store = createStore(rootReducer, storeInitialState);
 window.__store = store;
@@ -95,7 +102,7 @@ store.dispatch(addNewMessageActionCreator({
 
 */
 
-console.log("Current State before dispatching actions with action creator >>>", store.getState());
+//console.log("Current State before dispatching actions with action creator >>>", store.getState());
 
 /* In messagesReducer, comment out the "case" after the switch statement 
 as well as the return statement right below the case.
@@ -110,8 +117,6 @@ store.dispatch(
   })
 );
 
-  console.log("Current state after dispatching action with action creator >>>", store.getState());
-
 store.dispatch(
   addNewMessageActionCreator({
     userName: "Trevor",
@@ -119,15 +124,15 @@ store.dispatch(
   })
 );
 
- store.dispatch(
+store.dispatch(
   addUserActionCreator({
-  userName: "Jimmy_Cliff"
-   })
- );
+    userName: "Jimmy_Cliff"
+  })
+);
 
 store.dispatch(
   addUserActionCreator({
-    userName: "Matt_Englad"
+    userName: "Matt_England"
   })
 );
 
@@ -143,8 +148,32 @@ store.dispatch(
     userName: "Jimmy_Cliff",
     text: "Anywhere, I am not that hungry!!"
   })
-); 
-  
-  console.log("Current state after dispatching action with action creator >>>", store.getState());
-  
+);
+
+store.dispatch(
+  addNewMessageActionCreator({
+    userName: "Crunch",
+    text: "CHOMP"
+  })
+);
+
+store.dispatch(
+  addNewMessageActionCreator({
+    userName: "trent",
+    text: "teach"
+  })
+);
+
+store.dispatch(
+  addNewMessageActionCreator({
+    userName: "trent",
+    text: "teach 2x"
+  })
+);
+
+console.log(
+  "Current state after dispatching action with action creator >>>",
+  store.getState()
+);
+
 export default store;
