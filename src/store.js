@@ -2,53 +2,69 @@ import { createStore, combineReducers } from "redux";
 
 
 const addNewMessageActionCreator = ({ userName, text }) => ({
-  type: "FILL_ME_IN",
+  type: "ADD_MESSAGE",
   payload: { userName, text }
 });
 
 
-const addUserActionCreator = ({/*FILL ME IN*/ }) => ({
-  //complete this action creator
+const addUserActionCreator = ({userName}) => ({
+  type: "ADD_USER",
+  payload: {userName} //???{userName}
 });
 
-const defaultCurrentStudentAppState = { userName: "", text: "" };
+const defaultAppState = { userName: "", text: "" };
 
-const messagesReducer = function(previousState = defaultAppState, action) {
-  previousState = defaultCurrentStudentAppState,
-  action
- 
-  // console.log(">>> ACTION OF Type >>> new message " + action.type);
-  // console.log(">>> ACTION's PAYLOAD IS >>> new message ", action.payload);
+const messagesReducer = function (previousState = defaultAppState, action) {
+  console.log(">>> ACTION OF Type >>> new message " + action.type);
+  console.log(">>> ACTION's PAYLOAD IS >>> new message ", action.payload);
   switch (action.type) {
     case "ADD_MESSAGE":
       return {
         userName: action.payload.userName,
         text: action.payload.text
       };
+    default:
+      return previousState;
+  }
 };
 
-const defaultStudentsAppState = {list: [], total: 0}
 const usersReducer = function(previousState = { userList: [] }, action) {
-  // console.log(">>> ACTION OF Type >>> user " + action.type);
-  //console.log(">>> ACTION's PAYLOAD IS >>> user ", action.payload);
-  switch (/* fill me in */) {
-    case "FILL_ME_IN":
+  console.log(">>> ACTION OF Type >>> user " + action.type);
+  console.log(">>> ACTION's PAYLOAD IS >>> user ", action.payload);
+  switch (action.type) {
+    case "ADD_USER":
       return {
         userList: [...previousState.userList, action.payload],
       };
-      /* fill me in */
+    case "ADD_MESSAGE":
+      if (previousState.userList.indexOf(action.payload) === -1) {
+        return {
+          userList: [...previousState.userList, action.payload],
+        }
+      };
     default:
-      return /* fill me in */;
+      return previousState;
   }
 };
 
 const chatRoomReducer = function(previousState = [], action) {
   //complete this reducer function
+  console.log(">>> ACTION OF Type >>> user " + action.type);
+  console.log(">>> ACTION's PAYLOAD IS >>> user ", action.payload);
+  switch (action.type) {
+    case "ADD_MESSAGE":
+      return [...previousState, action.payload];
+    default: 
+      return previousState;
+  }
 };
 
 const rootReducer = combineReducers({
-  messages: messagesReducer
+  messages: messagesReducer,
   //add the rest of the reducers
+  users: usersReducer,
+  chatList: chatRoomReducer
+
 });
 
 const storeInitialState = {
@@ -87,33 +103,47 @@ call the dispatch function below.
 Because we are not handling the action type, note that the previous state is returned.
 Now let's handle that action by uncommenting the case and return statement. Note the new current state. */
 
-// store.dispatch(
-//   addNewMessageActionCreator({
-//     userName: "Lauren",
-//     text: "Where should we go out to eat?"
-//   })
-// );
+store.dispatch(
+  addNewMessageActionCreator({
+    userName: "Lauren",
+    text: "Where should we go out to eat?"
+  })
+);
 
   console.log("Current state after dispatching action with action creator >>>", store.getState());
 
-// store.dispatch(
-//   addNewMessageActionCreator({
-//     userName: "Trevor",
-//     text: "Anywhere, I'm SO HUNGRY!!"
-//   })
-// );
+store.dispatch(
+  addNewMessageActionCreator({
+    userName: "Trevor",
+    text: "Anywhere, I'm SO HUNGRY!!"
+  })
+);
 
-//  store.dispatch(
-//   addUserActionCreator({
-//   userName: "Jimmy_Cliff"
-//    })
-//  );
+ store.dispatch(
+  addUserActionCreator({
+  userName: "Jimmy_Cliff"
+   })
+ );
 
-  
-  
-  
-  store.dispatch(/* dispatch more newMessageActionCreators */);
-  store.dispatch(/* dispatch usersActionCreators */);
+store.dispatch(
+  addUserActionCreator({
+    userName: "Matt_Englad"
+  })
+);
+
+store.dispatch(
+  addNewMessageActionCreator({
+    userName: "Matt_England",
+    text: "DOWN WITH PICKLES!!"
+  })
+);
+
+store.dispatch(
+  addNewMessageActionCreator({
+    userName: "Jimmy_Cliff",
+    text: "Anywhere, I am not that hungry!!"
+  })
+); 
   
   console.log("Current state after dispatching action with action creator >>>", store.getState());
   
